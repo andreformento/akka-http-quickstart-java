@@ -1,4 +1,4 @@
-# akka-http-quickstart-scala
+# akka-http-quickstart-java
 
 ### Requirements
 - Java
