@@ -4,13 +4,14 @@ import akka.actor.AbstractActor;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import com.lightbend.akka.http.sample.UserRegistryMessages.CreateUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserRegistryActor extends AbstractActor {
 
-    LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
+    private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
     //#user-case-classes
     public static class User {
@@ -70,7 +71,7 @@ public class UserRegistryActor extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(UserRegistryMessages.GetUsers.class, getUsers -> getSender().tell(new Users(users), getSelf()))
-                .match(UserRegistryMessages.CreateUser.class, createUser -> {
+                .match(CreateUser.class, createUser -> {
                     users.add(createUser.getUser());
                     getSender().tell(new UserRegistryMessages.ActionPerformed(
                             String.format("User %s created.", createUser.getUser().getName())), getSelf());
