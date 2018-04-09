@@ -51,5 +51,5 @@ curl -X DELETE http://localhost:8080/users/Bill
 
 ## References
 
-- https://developer.lightbend.com/guides/akka-http-quickstart-scala/
-- https://developer.lightbend.com/guides/akka-quickstart-scala
+- https://developer.lightbend.com/guides/akka-http-quickstart-java
+- https://developer.lightbend.com/guides/akka-quickstart-java
