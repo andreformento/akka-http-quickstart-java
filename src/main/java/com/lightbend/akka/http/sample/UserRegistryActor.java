@@ -59,7 +59,7 @@ public class UserRegistryActor extends AbstractActor {
             return users;
         }
     }
-//#user-case-classes
+    //#user-case-classes
 
     static Props props() {
         return Props.create(UserRegistryActor.class);
