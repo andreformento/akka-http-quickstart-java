@@ -9,7 +9,7 @@
 - On OSX or Linux systems, enter `./sbt`
 - On Windows systems, enter `sbt.bat`.
 
-At the sbt prompt, enter `reStart`. Access on http://localhost:8080
+At the sbt prompt, enter `run`. Access on http://localhost:8080
 
 
 - Add some users
