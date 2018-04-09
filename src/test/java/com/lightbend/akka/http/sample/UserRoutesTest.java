@@ -1,25 +1,21 @@
 package com.lightbend.akka.http.sample;
 
-
 //#test-top
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-
-import akka.http.javadsl.model.*;
+import akka.http.javadsl.model.HttpRequest;
+import akka.http.javadsl.model.MediaTypes;
+import akka.http.javadsl.model.StatusCodes;
 import akka.http.javadsl.testkit.JUnitRouteTest;
 import akka.http.javadsl.testkit.TestRoute;
 import org.junit.Before;
 import org.junit.Test;
-import akka.http.javadsl.model.HttpRequest;
-import akka.http.javadsl.model.StatusCodes;
-
 
 //#set-up
 public class UserRoutesTest extends JUnitRouteTest {
     //#test-top
     private TestRoute appRoute;
-
 
     @Before
     public void initClass() {
@@ -28,6 +24,7 @@ public class UserRoutesTest extends JUnitRouteTest {
         QuickstartServer server = new QuickstartServer(system, userRegistryActor);
         appRoute = testRoute(server.createRoute());
     }
+
     //#set-up
     //#actual-test
     @Test

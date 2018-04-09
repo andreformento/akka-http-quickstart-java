@@ -29,7 +29,6 @@ public class UserRoutes extends AllDirectives {
     final private ActorRef userRegistryActor;
     final private LoggingAdapter log;
 
-
     public UserRoutes(ActorSystem system, ActorRef userRegistryActor) {
         this.userRegistryActor = userRegistryActor;
         log = Logging.getLogger(system, this);
@@ -45,14 +44,14 @@ public class UserRoutes extends AllDirectives {
     //#users-get-delete
     public Route routes() {
         return route(pathPrefix("users", () ->
-            route(
-                getOrPostUsers(),
-                path(PathMatchers.segment(), name -> route(
-                    getUser(name),
-                    deleteUser(name)
-                  )
+                route(
+                        getOrPostUsers(),
+                        path(PathMatchers.segment(), name -> route(
+                                getUser(name),
+                                deleteUser(name)
+                                )
+                        )
                 )
-            )
         ));
     }
     //#all-routes
@@ -61,68 +60,68 @@ public class UserRoutes extends AllDirectives {
 
     //#users-get-delete
     private Route getUser(String name) {
-      return get(() -> {
-          //#retrieve-user-info
-          CompletionStage<Optional<User>> maybeUser = PatternsCS
-            .ask(userRegistryActor, new UserRegistryMessages.GetUser(name), timeout)
-            .thenApply(obj ->(Optional<User>) obj);
+        return get(() -> {
+            //#retrieve-user-info
+            CompletionStage<Optional<User>> maybeUser = PatternsCS
+                    .ask(userRegistryActor, new UserRegistryMessages.GetUser(name), timeout)
+                    .thenApply(obj -> (Optional<User>) obj);
 
-          return onSuccess(() -> maybeUser,
-              performed -> {
-                  if (performed.isPresent())
-                      return complete(StatusCodes.OK, performed.get(), Jackson.marshaller());
-                  else
-                      return complete(StatusCodes.NOT_FOUND);
-              }
+            return onSuccess(() -> maybeUser,
+                    performed -> {
+                        if (performed.isPresent())
+                            return complete(StatusCodes.OK, performed.get(), Jackson.marshaller());
+                        else
+                            return complete(StatusCodes.NOT_FOUND);
+                    }
             );
-          //#retrieve-user-info
+            //#retrieve-user-info
         });
     }
 
     private Route deleteUser(String name) {
-      return
-          //#users-delete-logic
-          delete(() -> {
-            CompletionStage<ActionPerformed> userDeleted = PatternsCS
-              .ask(userRegistryActor, new UserRegistryMessages.DeleteUser(name), timeout)
-              .thenApply(obj ->(ActionPerformed)obj);
+        return
+                //#users-delete-logic
+                delete(() -> {
+                    CompletionStage<ActionPerformed> userDeleted = PatternsCS
+                            .ask(userRegistryActor, new UserRegistryMessages.DeleteUser(name), timeout)
+                            .thenApply(obj -> (ActionPerformed) obj);
 
-            return onSuccess(() -> userDeleted,
-              performed -> {
-                log.info("Deleted user [{}]: {}", name, performed.getDescription());
-                return complete(StatusCodes.OK, performed, Jackson.marshaller());
-              }
-            );
-          });
-          //#users-delete-logic
+                    return onSuccess(() -> userDeleted,
+                            performed -> {
+                                log.info("Deleted user [{}]: {}", name, performed.getDescription());
+                                return complete(StatusCodes.OK, performed, Jackson.marshaller());
+                            }
+                    );
+                });
+        //#users-delete-logic
     }
     //#users-get-delete
 
     //#users-get-post
     private Route getOrPostUsers() {
         return pathEnd(() ->
-            route(
-                get(() -> {
-                    CompletionStage<UserRegistryActor.Users> futureUsers = PatternsCS
-                        .ask(userRegistryActor, new UserRegistryMessages.GetUsers(), timeout)
-                        .thenApply(obj ->(UserRegistryActor.Users) obj);
-                    return onSuccess(() -> futureUsers,
-                        users -> complete(StatusCodes.OK, users, Jackson.marshaller()));
-                }),
-                post(() ->
-                    entity(
-                        Jackson.unmarshaller(User.class),
-                        user -> {
-                            CompletionStage<ActionPerformed> userCreated = PatternsCS
-                                .ask(userRegistryActor, new CreateUser(user), timeout)
-                                .thenApply(obj ->(ActionPerformed) obj);
-                            return onSuccess(() -> userCreated,
-                                performed -> {
-                                    log.info("Created user [{}]: {}", user.getName(), performed.getDescription());
-                                    return complete(StatusCodes.CREATED, performed, Jackson.marshaller());
-                                });
-                        }))
-            )
+                route(
+                        get(() -> {
+                            CompletionStage<UserRegistryActor.Users> futureUsers = PatternsCS
+                                    .ask(userRegistryActor, new UserRegistryMessages.GetUsers(), timeout)
+                                    .thenApply(obj -> (UserRegistryActor.Users) obj);
+                            return onSuccess(() -> futureUsers,
+                                    users -> complete(StatusCodes.OK, users, Jackson.marshaller()));
+                        }),
+                        post(() ->
+                                entity(
+                                        Jackson.unmarshaller(User.class),
+                                        user -> {
+                                            CompletionStage<ActionPerformed> userCreated = PatternsCS
+                                                    .ask(userRegistryActor, new CreateUser(user), timeout)
+                                                    .thenApply(obj -> (ActionPerformed) obj);
+                                            return onSuccess(() -> userCreated,
+                                                    performed -> {
+                                                        log.info("Created user [{}]: {}", user.getName(), performed.getDescription());
+                                                        return complete(StatusCodes.CREATED, performed, Jackson.marshaller());
+                                                    });
+                                        }))
+                )
         );
     }
 
