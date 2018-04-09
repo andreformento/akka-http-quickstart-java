@@ -35,7 +35,7 @@ public class UserRoutes extends AllDirectives {
     }
 
     // Required by the `ask` (?) method below
-    Timeout timeout = new Timeout(Duration.create(5, TimeUnit.SECONDS)); // usually we'd obtain the timeout from the system's configuration
+    private final Timeout timeout = new Timeout(Duration.create(5, TimeUnit.SECONDS)); // usually we'd obtain the timeout from the system's configuration
 
     /**
      * This method creates one route (of possibly many more that will be part of your Web App)
